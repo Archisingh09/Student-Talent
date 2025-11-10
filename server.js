@@ -14,7 +14,7 @@ import upload from "./middleware/upload.js";
 import Post from "./models/post.js";
 import postRoutes from "./routes/postRoutes.js"
 import wrapasync from  "./utils/wrapasync.js";
-import ExpressError from "./utils/ExpressError.js";
+import ExpressError from "./utils/ExpressError.js"; 
 
 
 const router = express.Router();
@@ -22,6 +22,7 @@ const router = express.Router();
 
 
 dotenv.config();
+const mongoURI = process.env.MONGO_URI || "your MongoDB URI here";
 const app = express(); 
 // Middlewares
 app.use(express.urlencoded({ extended: true })); // form data
@@ -119,15 +120,15 @@ app.get("/myaccount", (req,res) =>{
 
 
 //for databade
-mongoose.connect("mongodb://127.0.0.1:27017/student-Social")
+mongoose.connect(mongoURI)
   .then(() => {
-      console.log("✅ MongoDB Connected");
+    console.log("✅ Connected to MongoDB successfully!");
+ 
   })
-  .catch(err => {
-      console.log("❌ Mongo Connection Error:", err);
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+   
   });
-
-
 // Demo user route
 
 app.post("/users/:id/post", upload.single("media"), async (req, res) => {
