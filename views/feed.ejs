@@ -31,6 +31,7 @@ h1{
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
       scroll-behavior: smooth;
+      text-align: center;
     }
 
     .post {
@@ -161,7 +162,7 @@ h1{
   <h1> CSJMU Students Talent</h1>
   <div class="feed-container">
     <% if (posts.length === 0) { %>
-      <p class="no-posts">No posts yet. <a href="/upload">Upload one!</a></p>
+      <p class="no-posts">No posts yet.</p>
     <% } else { %>
       <% posts.forEach(post => { %>
         <div class="post">
