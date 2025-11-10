@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Upload Post</title>
+  </head>
+  <body>
+    <h1>📤 Upload a Post</h1>
+    <form action="/posts/upload" method="POST" enctype="multipart/form-data">
+      <label>Caption:</label>
+      <input type="text" name="caption" required />
+      <br /><br />
+      <label>Image:</label>
+      <input type="file" name="image" accept="image/*" />
+      <br /><br />
+      <button type="submit">Upload</button>
+    </form>
+  </body>
+</html>

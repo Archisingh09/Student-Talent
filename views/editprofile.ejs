@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+
+<div class="container">
+  <h2>Edit Profile</h2>
+  <form action="/profile/<%= user._id %>" method="POST" enctype="multipart/form-data">
+    <input type="text" name="name" value="<%= user.name %>" required>
+    <input type="text" name="hobby" value="<%= user.hobby %>" required>
+    <textarea name="bio"><%= user.bio %></textarea>
+
+    <% if (user.profilePic) { %>
+      <div>
+        <p>Current Photo:</p>
+        <img src="<%= user.profilePic %>" alt="Profile Picture" width="120">
+      </div>
+    <% } %>
+
+    <input type="file" name="profilePic">
+    <button type="submit">Save Changes</button>
+  </form>
+</div>
+
+</body>
+</html>

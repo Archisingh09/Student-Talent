@@ -1,0 +1,231 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  body {
+    background-color: #ccd5ae;
+    font-family: Arial, sans-serif;
+  }
+  .userpage {
+    justify-content: space-between;
+    display: flex;
+    border-bottom: 2px solid black;
+    margin-top: 90px;
+  }
+
+  .profile {
+    display: flex;
+    align-items: flex-start;
+    gap: 50px;
+    padding: 40px;
+  }
+
+  .profile img {
+    height: 180px;
+    width: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ccd5ae;
+  }
+
+  .bio {
+    flex-grow: 1;
+  }
+
+  .posts-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 40px;
+    justify-content: center;
+  }
+
+  .post-card {
+    background: #f5f5dc;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 250px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .post-img, .post-video {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .caption {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  button {
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  button.delete {
+    background-color: #e63946;
+    color: white;
+    padding: 6px 12px;
+  }
+
+  .postupload {
+    margin-left: 300px;
+  }
+
+  /* ❤️ Like button styling */
+  .like-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    margin-top: 6px;
+  }
+
+  .like-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .like-btn:hover {
+    transform: scale(1.2);
+  }
+
+  .like-btn.liked {
+    color: red;
+  }
+
+  .like-count {
+    color: black;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 18px;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  @media (max-width: 768px) {
+    .profile {
+      flex-direction: column;
+    }
+    .profile img {
+      width: 250px;
+      height: 250px;
+    }
+    .postupload {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+</style>
+
+<body>
+  <div class="userpage">
+    <div class="profile">
+      <img src="<%= user.profilePicture || '/default-avatar.jpg' %>" alt="profilePicture">
+      <div class="bio">
+        <h2><%= user.username %>'s Profile</h2>
+        <p><b>Email:</b> <%= user.email %></p>
+        <p><b>Talent:</b> <%= user.talentCategory || 'none' %></p>
+        <p><b>Bio:</b> <%= user.bio || 'none' %></p>
+
+        <a href="/edit"><button>Edit Profile</button></a>
+
+        <form action="/delete" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete your account?');">
+          <button type="submit" class="delete">Delete Account</button>
+        </form>
+      </div>
+
+      <div class="postupload">
+        <h1>📤 Post your talent</h1>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+          <label>Caption:</label>
+          <input type="text" name="caption" required />
+          <br /><br />
+          <label>Image/Video:</label>
+          <input type="file" name="file" accept="image/*,video/*" />
+          <br /><br />
+          <button type="submit">Upload</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="text-align:center;">My Posts</h2>
+
+  <div class="posts-section">
+    <% if (posts && posts.length > 0) { %>
+      <% posts.forEach(post => { %>
+        <div class="post-card">
+          <a href="/post/<%= post._id %>">
+            <% if (post.video) { %>
+              <video controls class="post-video">
+                <source src="/uploads/<%= post.video %>" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            <% } else if (post.image) { %>
+              <img src="/uploads/<%= post.image %>" alt="Post Image" class="post-img">
+            <% } %>
+          </a>
+
+          <p class="caption"><%= post.caption %></p>
+
+          <form action="/delete-post/<%= post._id %>" method="POST" onsubmit="return confirm('Delete this post?');">
+            <button type="submit" class="delete">🗑 Delete</button>
+          </form>
+
+          <!-- ❤️ Like button -->
+          <form class="like-form" data-id="<%= post._id %>">
+            <button type="submit" class="like-btn <%= post.likes.includes(user._id) ? 'liked' : '' %>">
+              <%= post.likes.includes(user._id) ? '❤️' : '🖤' %>
+            </button>
+            <span class="like-count"><%= post.likes.length %></span>
+          </form>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No posts yet. Upload something!</p>
+    <% } %>
+  </div>
+
+  <script>
+    // ❤️ Like button handler (no refresh)
+    document.querySelectorAll(".like-form").forEach(form => {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const postId = form.dataset.id;
+        const btn = form.querySelector(".like-btn");
+        const count = form.querySelector(".like-count");
+
+        if (!postId) return console.error("postId missing");
+
+        try {
+          const res = await fetch(`/like/${postId}`, { method: "POST" });
+          const data = await res.json();
+
+          if (res.ok) {
+           
+            btn.classList.toggle("liked");
+            btn.textContent = btn.classList.contains("liked") ? "❤️" : "🖤";
+            count.textContent = data.likesCount;
+          } else {
+            console.error("Error:", data.message);
+          }
+        } catch (err) {
+          console.error("Fetch failed:", err);
+        }
+      });
+    });
+  </script>
+</body>
+

@@ -1,0 +1,279 @@
+<% layout("/layouts/boilerplate") %>
+  <style>
+
+body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #e9edc9, #fefae0);
+      text-align: center;
+      
+    }
+
+    .profile-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 40px;
+      border-bottom: 2px solid #d4a373;
+      padding-bottom: 20px;
+    margin-top: 100px;
+    }
+
+    .profile-header img {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 3px solid #d4a373;
+      object-fit: cover;
+    }
+
+    .user-info h2 {
+      font-size: 28px;
+      color: #9e2a2b;
+    }
+
+    .user-info p {
+      font-size: 18px;
+      color: #283618;
+    }
+
+    .posts-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .post-card {
+      background-color: #ccd5ae;
+      padding: 10px;
+      border-radius: 10px;
+      width: 500px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .post-card img {
+      width: 100%;
+      border-radius: 10px;
+     height: 400px;
+      
+    }
+
+    .caption {
+      margin-top: 10px;
+      font-size: 16px;
+    } ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  /* ✅ Center the posts */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ul li {
+  background: white;
+  width: 90%;
+  max-width: 500px;   /* ✅ Posts will stay centered and neat */
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  text-align: center; /* ✅ Text also centered */
+}
+
+ul li img {
+  width: 100%;
+  border-radius: 10px;
+  height: 60%;
+}
+video{
+  height: 600px;
+}
+
+
+
+
+/* ===== Caption Styling ===== */
+.caption {
+  flex: 1;
+  font-size: 1.05rem;
+  color: #333;
+  font-weight: 500;
+  word-break: break-word;
+  line-height: 1.5;
+  text-align: left;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+ 
+}
+
+
+.caption:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+}
+ .likecaption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      padding: 5px 10px;
+    }
+
+    /* ❤️ Like Button */
+    .like-btn {
+      background: none;
+      border: none;
+      font-size: 25px;
+      cursor: pointer;
+      color: #000;
+      transition: transform 0.2s ease, color 0.3s ease;
+     
+    }
+
+    .like-btn:hover {
+      transform: scale(1.2);
+      color: #e63946;
+    }
+
+    .like-btn.liked {
+      color: #e63946;
+      transform: scale(1.3);
+    }
+
+    .like-count {
+      font-weight: bold;
+      font-size: 18px;
+      margin-right: 10px;
+    }
+
+    .caption {
+      flex: 1;
+      font-size: 1rem;
+      background: #fefae0;
+      border-radius: 10px;
+      padding: 10px;
+      color: #333;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    .timestamp {
+      font-size: 0.85rem;
+      color: #777;
+      text-align: right;
+      display: block;
+      margin-top: 10px;
+    }
+
+
+
+    
+
+
+@media( max-width: 600px){
+  .profile-header{
+    flex-direction: column;
+    gap: 15px;
+  }
+  video{
+    max-width: 280px;
+  }
+}
+
+  </style>
+  
+</head>
+<body>
+
+  <div class="profile-header">
+    <img src="<%= user.profilePicture || '/photo.jpg' %>" alt="Profile Picture">
+    <div class="user-info">
+      <h2><%= user.username %></h2>
+      <p><b>Talent:</b> <%= user.talentCategory || "Not specified" %></p>
+      <p><b>Bio:</b> <%= user.bio || "No bio yet." %></p>
+    </div>
+  </div>
+
+  <h1>Posts:</h1>
+
+  <ul>
+    <% if (posts.length === 0) { %>
+      <li>No posts yet.</li>
+    <% } else { %>
+      <% posts.forEach(post => { %>
+        <li class="post">
+          <% if (post.video) { %>
+            <video controls class="post-media">
+              <source src="/uploads/<%= post.video %>" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          <% } else if (post.image) { %>
+            <img src="/uploads/<%= post.image %>" alt="Post Image" class="post-media">
+          <% } %>
+
+          <div class="likecaption">
+            <!-- <form class="like-form" data-id="<%= post._id %>">
+              <button type="submit" class="like-btn">
+                <i class="fa-solid fa-heart"></i>
+              </button>
+              <span class="like-count"><%= post.likes.length %></span>
+            </form> -->
+
+              <form class="like-form" data-id="<%= post._id %>">
+            <button type="submit" class="like-btn <%= post.likes.includes(user._id) ? 'liked' : '' %>">
+              <%= post.likes.includes(user._id) ? '❤️' : '🖤' %>
+            </button>
+            <span class="like-count"><%= post.likes.length %></span>
+          </form>
+            <div class="caption"><%= post.caption %></div>
+          </div>
+
+          <small class="timestamp">🕒 <%= new Date(post.createdAt).toLocaleString() %></small>
+         
+        </li>
+      <% }) %>
+    <% } %>
+  </ul>
+
+
+<script>
+
+  // ❤️ Like button handler (no refresh)
+    document.querySelectorAll(".like-form").forEach(form => {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const postId = form.dataset.id;
+        const btn = form.querySelector(".like-btn");
+        const count = form.querySelector(".like-count");
+
+        if (!postId) return console.error("postId missing");
+
+        try {
+          const res = await fetch(`/like/${postId}`, { method: "POST" });
+          const data = await res.json();
+
+          if (res.ok) {
+           
+            btn.classList.toggle("liked");
+            btn.textContent = btn.classList.contains("liked") ? "❤️" : "🖤";
+            count.textContent = data.likesCount;
+          } else {
+            console.error("Error:", data.message);
+          }
+        } catch (err) {
+          console.error("Fetch failed:", err);
+        }
+      });
+    });
+</script>
+
+</body>
+

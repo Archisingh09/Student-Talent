@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+     <style>   
+         body{
+      margin: 0;
+      padding: 0;
+      background: linear-gradient( to right, #e9edc9, #e9edc9, #fefae0 );
+      overflow: hidden;
+    }
+    .navbar{
+      font-size: 20px;
+      border: 2px solid black;
+      background-color: #d4a373;
+      padding: 20px;  position: fixed;         /* keeps it stable at top */
+      top: 0;                  /* stick to top */
+      left: 0;
+      width: 100%;
+      align-items: center;
+      justify-content: space-evenly;
+      display: flex;
+    }
+    a{
+      
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+      font-size: 30px;
+
+    }
+    a:hover{
+      color: #9e2a2b;
+      text-shadow: 0 0 10px #ccd5ae;
+    }
+    .searchbar{
+      width: 400px;
+      height: 30px;
+      border-radius: 10px;
+      border: 2px solid black;
+      padding: 5px;
+      text-align: center;
+    }
+    .searchbar:hover{
+      border: 2px solid #9e2a2b;
+      box-shadow: 0 0 10px #ccd5ae;
+      text-shadow: 0 0 10px #9e2a2b;
+    }
+    .search button{
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      
+    }
+    .search button:hover i{
+      text-shadow:  0 0 10px #ccd5ae;
+      color: #9e2a2b;
+      border: #9e2a2b;
+    }
+
+    .search button:hover{
+      cursor: pointer;
+      background-color: #e9edc9;
+    }
+
+    /* ===== Base Layout ===== */
+ 
+
+    /* ===== Header ===== */
+    h1 {
+      top: 0;
+      width: 100%;
+      z-index: 10;
+      background: linear-gradient(90deg, #ccd5ae, #d4a373);
+      color: #283618;
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      margin: 0;
+      padding: 15px 10px;
+      text-align: center;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 80px;
+    }
+
+    /* ===== Feed Container ===== */
+    .feed-container {
+      margin-top: 20px;
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    /* ===== Post Card ===== */
+    .post {
+      scroll-snap-align: start;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      margin: 30px auto;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.6;
+      transform: scale(0.93);
+      transition: all 0.6s ease;
+      position: relative;
+      padding: 10px;
+      background: none;
+    }
+
+    .post.active {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ===== Username ===== */
+    .username {
+      font-weight: 600;
+      color: #283618;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: clamp(1rem, 3vw, 1.1em);
+    }
+
+    .username::before {
+      content: "👤";
+      font-size: 1.3em;
+    }
+
+    /* ===== Image ===== */
+    .post img {
+      width: 100%;
+      max-width: 480px;
+      max-height: 60vh;
+      border-radius: 16px;
+      object-fit: contain;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .post img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ===== Caption ===== */
+    .caption {
+      margin-top: 12px;
+      font-size: clamp(0.95rem, 3vw, 1.1em);
+      color: #444;
+      text-align: center;
+      width: 85%;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    /* ===== Timestamp ===== */
+    .timestamp {
+      margin-top: 10px;
+      font-size: clamp(0.8rem, 2vw, 0.9em);
+      color: #777;
+      font-style: italic;
+    }
+
+    /* ===== Empty Feed Message ===== */
+    .no-posts {
+      text-align: center;
+      font-size: clamp(1rem, 3vw, 1.2em);
+      margin-top: 150px;
+      color: #555;
+      line-height: 1.6;
+      padding: 0 20px;
+    }
+
+    .no-posts a {
+      color: #606c38;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .no-posts a:hover {
+      text-decoration: underline;
+      color: #283618;
+    }
+
+    /* ===== Scrollbar Styling ===== */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #ccd5ae, #d4a373);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #fefae0;
+    }
+
+    /* ===== Floating Gradient Effect ===== */
+    .post::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      right: -20px;
+      bottom: -20px;
+      background: radial-gradient(circle at top left, rgba(204, 213, 174, 0.2), transparent 70%);
+      border-radius: 20px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .post.active::before {
+      opacity: 1;
+    }
+
+    /* ===== Responsive Adjustments ===== */
+    @media (max-width: 768px) {
+      .post {
+        margin: 20px auto;
+        border-radius: 14px;
+      }
+
+      .post img {
+        max-height: 60vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.1rem;
+        padding: 12px;
+      }
+
+      .post {
+        padding: 8px;
+        border-radius: 12px;
+      }
+
+      .caption {
+        width: 90%;
+        font-size: 1rem;
+      }
+
+      .timestamp {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+    <div class="navbar">
+  <a class="home" href="/feed" > Home</a>
+<div class="search">
+  <form action="/search" method="GET" style="display:flex; align-items:center; gap:8px;">
+    <input 
+      class="searchbar" 
+      type="text" 
+      name="query" 
+      placeholder="Search by Talent or Student Name.." 
+      required
+    >
+    <button type="submit"><i class="fa fa-search"></i></button>
+  </form>
+  <a href="/signup">Signup</a>
+  <a href="/Login">Login</a>
+</div>
+</div>
+  <h1>CSJMU Students Talent Feed</h1>
+
+  <div class="feed-container">
+    <% if (posts.length === 0) { %>
+      <p class="no-posts">No posts yet. <a href="/upload">Upload one!</a></p>
+    <% } else { %>
+      <% posts.forEach(post => { %>
+        <div class="post">
+          <div class="username"><%= post.user ? post.user.username : "Anonymous" %></div>
+          <% if (post.image) { %>
+            <img src="/uploads/<%= post.image %>" alt="Post image">
+          <% } %>
+          <div class="caption"><%= post.caption %></div>
+          <small class="timestamp">🕒 <%= new Date(post.createdAt).toLocaleString() %></small>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <script>
+    const posts = document.querySelectorAll('.post');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        } else {
+          entry.target.classList.remove('active');
+        }
+      });
+    }, { threshold: 0.6 });
+
+    posts.forEach(post => observer.observe(post));
+  </script>
+</body>
+</html>
+ 

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Student Talent</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fefae0;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #d4a373;
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid black;
+      z-index: 100;
+      
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-left: 20px;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: black;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      color: #9e2a2b;
+    }
+
+    .searchbar {
+      width: 300px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 2px solid black;
+    }
+
+    .search form {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-right: 35px;
+    }
+
+    /* Menu Icon (mobile only) */
+    .menu-icon {
+      display: none;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    /* ---------- MOBILE VIEW ---------- */
+    @media (max-width: 768px) {
+
+      .searchbar {
+        width: 150px;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 68px;
+        right: -280px;
+        text-align: center;
+        width: 70px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 0 0 0 12px;
+        transition: 0.3s ease;
+        height: auto;
+        background-color: white;
+        margin-right: 1px;
+      }
+
+      .nav-links.show {
+        right: 0px;
+      }
+
+      .menu-icon {
+        display: block;
+        width: 70px;
+      }
+    }
+    .navbutton {
+      border:2px solid black; border-radius:50%;  width: 30px;
+  height: 30px;background:#fff; cursor:pointer;
+  color: #000;
+
+    } 
+    .search i{
+      color: #000;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+
+  <div class="navbar-left">
+    <a href="/feed"><i class="fa fa-home"></i></a>
+    
+    <div class="search">
+      <form action="/search" method="GET">
+        <input class="searchbar" type="text" name="query" placeholder="Search..." required>
+        <button type="submit" class="navbutton">
+          <i class="fa fa-search"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Links for Desktop / Slide Menu Mobile -->
+  <div class="nav-links" id="navLinks">
+    <a href="/myaccount">My Account</a>
+    <a href="/logout">Logout</a>
+  </div>
+
+  <!-- Menu Icon -->
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
+
+</div>
+
+<script>
+function toggleMenu() {
+  document.getElementById("navLinks").classList.toggle("show");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  /* ===== Base ===== */
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #e9edc9, #fefae0);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ===== Container ===== */
+  .edit-container {
+    max-width: 600px;
+    margin: 70px auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    animation: fadeIn 0.4s ease-in-out;
+    transition: all 0.3s ease;
+ 
+    
+  }
+
+  .edit-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== Header ===== */
+  .edit-container h1 {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #283618;
+  }
+
+  /* ===== Profile Image ===== */
+  .profile-img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 10px auto 20px;
+    border: 4px solid #d4a373;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+  }
+
+  .profile-img:hover {
+    transform: scale(1.05);
+  }
+
+  /* ===== Labels ===== */
+  label {
+    display: block;
+    font-weight: 500;
+    margin: 12px 0 6px;
+    color: #606c38;
+    text-align: left;
+  }
+
+  /* ===== Inputs, Textareas, Selects ===== */
+  .edit-container input,
+  .edit-container textarea,
+  .edit-container select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #ccc;
+    font-size: 15px;
+    outline: none;
+    transition: 0.25s;
+    background-color: #fafafa;
+  }
+
+  .edit-container input:focus,
+  .edit-container textarea:focus,
+  .edit-container select:focus {
+    border-color: #a3b18a;
+    box-shadow: 0 0 8px rgba(163, 177, 138, 0.5);
+    background-color: #fff;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  /* ===== Button ===== */
+  .editbutton {
+    width: 100%;
+    background: linear-gradient(90deg, #a3b18a, #588157);
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 600;
+    color: white;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .editbutton:hover {
+    background: linear-gradient(90deg, #87946c, #3a5a40);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(56, 102, 65, 0.25);
+  }
+
+  .editbutton:active {
+    transform: scale(0.97);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 500px) {
+    .edit-container {
+      width: 90%;
+      margin-top: 110px;
+      padding: 25px;
+    }
+
+    .profile-img {
+      width: 110px;
+      height: 110px;
+    }
+
+    .editbutton {
+      font-size: 16px;
+      padding: 12px;
+    }
+  }
+</style>
+
+<div class="edit-container">
+  <h1>✏️ Edit Profile</h1>
+
+  <form action="/edit" method="POST" enctype="multipart/form-data">
+    <% if (user.profilePicture) { %>
+      <img src="<%= user.profilePicture %>" alt="Profile Picture" class="profile-img">
+    <% } else { %>
+      <img src="/default-avatar.jpg" alt="Default Picture" class="profile-img">
+    <% } %>
+
+    <label>Upload New Profile Picture:</label>
+    <input type="file" name="image" accept="image/*">
+
+    <label>Bio:</label>
+    <textarea name="bio" rows="3"><%= user.bio || "" %></textarea>
+
+    <label>Talent Category:</label>
+    <select name="talentCategory">
+      <option value="">-- Select --</option>
+      <option value="Dance" <%= user.talentCategory === 'Dance' ? 'selected' : '' %>>Dance</option>
+      <option value="Music" <%= user.talentCategory === 'Music' ? 'selected' : '' %>>Music</option>
+      <option value="Art" <%= user.talentCategory === 'Art' ? 'selected' : '' %>>Art</option>
+      <option value="Photography" <%= user.talentCategory === 'Photography' ? 'selected' : '' %>>Photography</option>
+      <option value="Coding" <%= user.talentCategory === 'Coding' ? 'selected' : '' %>>Coding</option>
+    </select>
+
+    <button class="editbutton" type="submit">💾 Save Changes</button>
+  </form>
+</div>

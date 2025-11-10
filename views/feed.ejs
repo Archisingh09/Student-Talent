@@ -1,0 +1,239 @@
+<% layout("/layouts/boilerplate") %>
+
+<head>
+  <title>Student Social Feed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ✅ Font Awesome for heart & delete icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+
+  <style>
+    body {
+      font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #e9edc9, #fefae0);
+      margin: 0;
+      padding: 0;
+      color: #283618;
+      overflow: hidden;
+    }
+h1{
+  margin-top: 80px;
+  text-align: center;
+  color: #9e2a2b;
+
+}
+    .feed-container {
+      margin-top: 10px;
+      height: 80vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .post {
+      scroll-snap-align: start;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 500px;     
+       margin: 30px auto;
+
+      padding: 15px;
+     opacity: 1;              /* full visibility */
+  transform: scale(1); 
+      transition: all 0.6s ease;
+      position: relative;
+    }
+
+    .post.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .user-link:hover span {
+      color: #9e2a2b;
+    }
+
+   
+    .post .user-profile-img {
+  width: 30px;      /* ← Chhota circle */
+  height: 30px;     /* ← Same size to remain circular */
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 6px;
+  border: 1.5px solid #000; /* Small border */
+}
+
+
+    .post img, .post video {
+      width: 100%;
+      max-height: 60vh;
+      border-radius: 16px;
+      object-fit: contain;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+   
+    }
+
+    .likecaption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+     /* ❤️ Like Button */
+    .like-btn {
+      background: none;
+      border: none;
+      font-size: 25px;
+      cursor: pointer;
+      color: #000;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+
+    .like-btn:hover {
+      transform: scale(1.2);
+       color: #e63946;
+
+      
+    }
+
+    .like-btn.liked {
+     color: #e63946;
+      transform: scale(1.3);
+    
+    }
+   
+    .like-count {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+ 
+
+    .caption {
+      flex: 1;
+      font-size: 1rem;
+      background: #fefae0;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      color: #000;
+    }
+
+    .timestamp {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #777;
+      display: block;
+      text-align: right;
+    }
+
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #ccd5ae, #d4a373);
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1> CSJMU Students Talent</h1>
+  <div class="feed-container">
+    <% if (posts.length === 0) { %>
+      <p class="no-posts">No posts yet. <a href="/upload">Upload one!</a></p>
+    <% } else { %>
+      <% posts.forEach(post => { %>
+        <div class="post">
+          <div class="user-info">
+            <a href="/user/<%= post.user._id %>" class="user-link">
+              <img src="<%= post.user.profilePicture || '/photo.jpg' %>" class="user-profile-img" alt="Profile">
+              <span><%= post.user ? post.user.username : "Anonymous" %></span>
+            </a>
+          </div>
+
+          <% if (post.video) { %>
+            <video controls>
+              <source src="/uploads/<%= post.video %>" type="video/mp4">
+            </video>
+          <% } else if (post.image) { %>
+            <img src="/uploads/<%= post.image %>" alt="Post Image">
+          <% } %>
+ <div class="likecaption">
+            <!-- <form class="like-form" data-id="<%= post._id %>">
+             <button type="submit" class="like-btn">
+             
+                 <i class="fa-solid fa-heart"></i>
+              </button>
+              <span class="like-count"><%= post.likes.length %></span>
+            </form> -->
+               <!-- ❤️ Like button -->
+          <form class="like-form" data-id="<%= post._id %>">
+            <button type="submit" class="like-btn <%= post.likes.includes(user._id) ? 'liked' : '' %>">
+              <%= post.likes.includes(user._id) ? '❤️' : '🖤' %>
+            </button>
+            <span class="like-count"><%= post.likes.length %></span>
+          </form>
+            <div class="caption"><%= post.caption %></div>
+          </div>
+
+          <small class="timestamp">🕒 <%= new Date(post.createdAt).toLocaleString() %></small>
+     
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <script>
+
+  // ❤️ Like button handler (no refresh)
+    document.querySelectorAll(".like-form").forEach(form => {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const postId = form.dataset.id;
+        const btn = form.querySelector(".like-btn");
+        const count = form.querySelector(".like-count");
+
+        if (!postId) return console.error("postId missing");
+
+        try {
+          const res = await fetch(`/like/${postId}`, { method: "POST" });
+          const data = await res.json();
+
+          if (res.ok) {
+           
+            btn.classList.toggle("liked");
+            btn.textContent = btn.classList.contains("liked") ? "❤️" : "🖤";
+            count.textContent = data.likesCount;
+          } else {
+            console.error("Error:", data.message);
+          }
+        } catch (err) {
+          console.error("Fetch failed:", err);
+        }
+      });
+    });
+
+
+  </script>
+</body> 
