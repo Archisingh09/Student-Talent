@@ -59,15 +59,44 @@ router.get("/signup", (req, res) => {
 
 
 
-router.post("/signup", async (req, res) => {
+// router.post("/signup", async (req, res) => {
+//   try {
+//     const { username, email, password } = req.body;
+//     const newUser = new User({ username, email });
+//     const registeredUser = await User.register(newUser, password);
+//     console.log("✅ Registered User:", registeredUser);
+
+//     req.flash("success", "Welcome to Student Social!");
+//     res.redirect("/feed");
+//   } catch (e) {
+//     console.error("❌ Signup Error:", e);
+
+//     // ✅ Handle duplicate username and email
+//     if (e.name === "UserExistsError") {
+//       req.flash("error", "Username already taken. Please choose another.");
+//     } else if (e.code === 11000) {
+//       req.flash("error", "Email already registered. Try logging in.");
+//     } else {
+//       req.flash("error", "Something went wrong. Please try again.");
+//     }
+
+//     res.redirect("/signup");
+//   }
+// });
+router.post("/signup", async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
     const newUser = new User({ username, email });
     const registeredUser = await User.register(newUser, password);
     console.log("✅ Registered User:", registeredUser);
 
-    req.flash("success", "Welcome to Student Social!");
-    res.redirect("/feed");
+    // ✅ Log the user in after successful signup
+    req.login(registeredUser, (err) => {
+      if (err) return next(err);
+      req.flash("success", "Welcome to Student Social!");
+      return res.redirect("/feed");
+    });
+
   } catch (e) {
     console.error("❌ Signup Error:", e);
 

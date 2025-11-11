@@ -1,7 +1,7 @@
 <% layout("/layouts/boilerplate") %>
 
 <style>
-  /* ===== Base ===== */
+
   body {
     font-family: "Poppins", sans-serif;
     background: linear-gradient(135deg, #e9edc9, #fefae0);
@@ -9,7 +9,7 @@
     padding: 0;
   }
 
-  /* ===== Container ===== */
+
   .edit-container {
     max-width: 600px;
     margin: 70px auto;
@@ -28,12 +28,7 @@
     box-shadow: 0 12px 28px rgba(0,0,0,0.15);
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
 
-  /* ===== Header ===== */
   .edit-container h1 {
     text-align: center;
     font-weight: 600;
@@ -41,7 +36,7 @@
     color: #283618;
   }
 
-  /* ===== Profile Image ===== */
+
   .profile-img {
     width: 130px;
     height: 130px;
@@ -58,7 +53,7 @@
     transform: scale(1.05);
   }
 
-  /* ===== Labels ===== */
+
   label {
     display: block;
     font-weight: 500;
@@ -67,7 +62,7 @@
     text-align: left;
   }
 
-  /* ===== Inputs, Textareas, Selects ===== */
+
   .edit-container input,
   .edit-container textarea,
   .edit-container select {
@@ -156,15 +151,20 @@
     <textarea name="bio" rows="3"><%= user.bio || "" %></textarea>
 
     <label>Talent Category:</label>
-    <select name="talentCategory">
+    <textarea name="talentCategory" id=""></textarea>
+    <!-- <select name="talentCategory">
+      
       <option value="">-- Select --</option>
       <option value="Dance" <%= user.talentCategory === 'Dance' ? 'selected' : '' %>>Dance</option>
       <option value="Music" <%= user.talentCategory === 'Music' ? 'selected' : '' %>>Music</option>
       <option value="Art" <%= user.talentCategory === 'Art' ? 'selected' : '' %>>Art</option>
       <option value="Photography" <%= user.talentCategory === 'Photography' ? 'selected' : '' %>>Photography</option>
       <option value="Coding" <%= user.talentCategory === 'Coding' ? 'selected' : '' %>>Coding</option>
-    </select>
+      <option value="Coding" <%= user.talentCategory === 'Coding' ? 'selected' : '' %>></option>
+      <option value="Coding" <%= user.talentCategory === 'Coding' ? 'selected' : '' %>>Coding</option>
+      <option value="Coding" <%= user.talentCategory === 'Coding' ? 'selected' : '' %>>Coding</option>
+    </select> -->
 
-    <button class="editbutton" type="submit">💾 Save Changes</button>
+    <button class="editbutton" type="submit"> Save Changes</button>
   </form>
 </div>
