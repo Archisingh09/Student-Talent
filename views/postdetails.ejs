@@ -1,0 +1,112 @@
+<% layout("/layouts/boilerplate") %>
+  <title>Post Details</title>
+
+  <style>
+    /* 🩶 General Page Layout */
+    body {
+      font-family: "Poppins", sans-serif;
+      
+      background: linear-gradient(135deg, #e9edc9, #fefae0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+   
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      background: #fff;
+      max-width: 500px;
+      width: 90%;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.2s ease-in-out;
+    
+
+    }
+
+    .container:hover {
+      transform: translateY(-3px);
+    }
+
+    /* 🖼️ Image Styling */
+    .post-detail-image {
+      width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      margin-top: 50px;
+    }
+
+    /* ✍️ Caption */
+    .caption {
+      font-size: 1.1rem;
+      color: #333;
+      margin: 10px 0;
+    }
+
+    /* 🕒 Meta Info */
+    .meta {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 20px;
+    }
+
+    /* 👤 Username */
+    h2 {
+      font-size: 1.3rem;
+      color: #222;
+      margin-bottom: 15px;
+      text-transform: capitalize;
+    }
+
+    /* 🔙 Back Button */
+    .back-btn {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: background-color 0.3s;
+    }
+
+    .back-btn:hover {
+      background-color: #0056b3;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+
+      .caption {
+        font-size: 1rem;
+      }
+
+      .back-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- <h2><%= post.user.username %>’s Post</h2> -->
+
+    <% if (post.image) { %>
+      <img src="/uploads/<%= post.image %>" alt="Post Image" class="post-detail-image" />
+    <% } %>
+
+    <p class="caption"><%= post.caption %></p>
+    <p class="meta">Posted on <%= post.createdAt.toDateString() %></p>
+  </div>
+</body>
+</html>
